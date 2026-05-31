@@ -31,7 +31,7 @@ class EmailClassifier:
 
     def classify(self, content: str) -> str:
         """Определяет категорию письма на основе его содержимого."""
-        if not content:
+        if not content or not content.strip():
             return self.default_category
 
         content_lower = content.lower()
