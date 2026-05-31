@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  # Сервис 1: Базовое ядро (классификатор писем)
+  mail-processor:
+    build: .
+    container_name: it_mail_processor
+    # Передаем локальные папки в контейнер
+    volumes:
+      - ./inbox:/app/inbox
+      - ./output:/app/output
+    # Запускаем питон-скрипт
+    command: python3 src/main.py
+
+  # Сервис 2: Расширение (Веб-дашборд)
+  analytics-dashboard:
+    build: .
+    container_name: it_mail_dashboard
+    # Дашборд ждет, пока парсер закончит работу
+    depends_on:
+      - mail-processor
+    volumes:
+      - ./output:/app/output
+    ports:
+      - "8501:8501"
+    # Запускаем Streamlit скрипт
+    command: streamlit run extension/dashboard.py --server.port=8501 --server.address=0.0.0.0
