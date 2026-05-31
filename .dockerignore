@@ -1,0 +1,6 @@
+.git/
+.venv/
+pycache/
+.pytest_cache/
+inbox/
+output/

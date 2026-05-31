@@ -15,4 +15,4 @@ COPY . .
 EXPOSE 8501
 
 # Команда по умолчанию (будет переопределена в docker-compose)
-CMD ["python3", "src/main.py"]
+CMD ["python3","-m", "src.main"]
