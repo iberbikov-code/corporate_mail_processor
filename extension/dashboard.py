@@ -12,6 +12,7 @@ st.markdown("Интерактивный отчет по результатам �
 base_dir = Path(__file__).resolve().parent.parent
 output_dir = base_dir / "output"
 
+@st.cache_data(ttl=30)
 def load_data():
     """Считывает результаты работы классификатора из папки output."""
     if not output_dir.exists():
