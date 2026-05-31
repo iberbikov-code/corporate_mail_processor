@@ -52,4 +52,4 @@ class FileHandler:
 
     def get_all_inbox_files(self) -> list[Path]:
         """Возвращает список всех файлов в папке входящих."""
-        return [f for f in self.inbox_dir.iterdir() if f.is_file()]
+        return [f for f in self.inbox_dir.iterdir() if f.is_file() and not f.name.startswith('.')]
