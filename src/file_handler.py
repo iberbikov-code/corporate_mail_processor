@@ -3,13 +3,14 @@ import shutil
 import logging
 from pathlib import Path
 from src.models import EmailDocument
+from typing import Union
 
 logger = logging.getLogger(__name__)
 
 
 class FileHandler:
     """Класс для безопасной работы с файловой системой."""
-    def __init__(self, inbox_dir: str | Path, output_dir: str | Path):
+    def __init__(self, inbox_dir: Union[str, Path], output_dir: Union[str, Path]):
         self.inbox_dir = Path(inbox_dir)
         self.output_dir = Path(output_dir)
         self._ensure_directories()
