@@ -1,4 +1,5 @@
 """Модуль для работы с файловой системой и маршрутизации файлов."""
+import uuid
 import shutil
 import logging
 from pathlib import Path
@@ -31,24 +32,29 @@ class FileHandler:
             return EmailDocument(file_path=file_path, is_readable=True, content=content)
 
         except UnicodeDecodeError:
-            logger.warning("Файл %s не является текстом. Пропуск.", file_path.name)
-            return EmailDocument(file_path=file_path, is_readable=False)
+            try:
+                with open(file_path, 'r', encoding='windows-1251') as f:
+                    content = f.read()
+                return EmailDocument(file_path=file_path, is_readable=True, content=content)
 
-        except Exception as e:
-            logger.error("Непредвиденная ошибка при чтении %s: %s", file_path.name, e)
-            return EmailDocument(file_path=file_path, is_readable=False)
+            except UnicodeDecodeError:
+                logger.warning("Файл %s не является текстом (бинарный формат). Пропуск.", file_path.name)
+                return EmailDocument(file_path=file_path, is_readable=False)
 
     def route_file(self, document: EmailDocument, category: str) -> None:
-        """Копирует файл в папку соответствующей категории."""
+        """Копирует файл в папку соответствующей категории с защитой от перезаписи."""
         category_dir = self.output_dir / category
         category_dir.mkdir(parents=True, exist_ok=True)
 
-        destination = category_dir / document.file_path.name
+        unique_name = f"{document.file_path.stem}_{uuid.uuid4().hex[:8]}{document.file_path.suffix}"
+        destination = category_dir / unique_name
+        
         try:
             shutil.copy2(document.file_path, destination)
-            logger.debug("Файл %s успешно отправлен в %s", document.file_path.name, category)
+            logger.debug("Файл %s успешно отправлен в %s (сохранен как %s)", 
+                         document.file_path.name, category, unique_name)
         except Exception as e:
-            logger.error("Ошибка маршрутизации %s: %s", document.file_path.name, e)
+            logger.error("Ошибка маршрутизации файла %s: %s", document.file_path.name, e)
 
     def get_all_inbox_files(self) -> list[Path]:
         """Возвращает список всех файлов в папке входящих."""
