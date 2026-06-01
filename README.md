@@ -65,16 +65,6 @@ eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 ```bash
 brew install python@3.12
 ```
-4. Создайте виртуальное окружение именно на этой версии и активируйте его:
-```bash
-/opt/homebrew/bin/python3.12 -m venv .venv
-source .venv/bin/activate
-```
-5. Установи зависимости:
-```bash
-pip install -r requirements.txt**
-```
-
 ### Шаг 3. Скачайте проект на свой компьютер
 В том же терминале по очереди введите эти две команды:
 ```bash
