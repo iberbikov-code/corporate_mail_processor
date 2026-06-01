@@ -70,7 +70,10 @@ brew install python@3.12
 /opt/homebrew/bin/python3.12 -m venv .venv
 source .venv/bin/activate
 ```
-*(После этого можете сразу переходить к Шагу 5, пропустив 3 и 4)*.
+5. Установи зависимости:
+```bash
+bashpip install -r requirements.txt**
+```
 
 ### Шаг 3. Скачайте проект на свой компьютер
 В том же терминале по очереди введите эти две команды:
