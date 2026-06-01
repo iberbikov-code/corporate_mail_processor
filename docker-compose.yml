@@ -1,0 +1,20 @@
+services:
+  mail-processor:
+    build: .
+    container_name: it_mail_processor
+    volumes:
+      - ./inbox:/app/inbox
+      - ./output:/app/output
+    command: python3 -m src.main
+
+  analytics-dashboard:
+    build: .
+    container_name: it_mail_dashboard
+    depends_on:
+      mail-processor:
+        condition: service_completed_successfully
+    volumes:
+      - ./output:/app/output
+    ports:
+      - "8501:8501"
+    command: streamlit run extension/dashboard.py --server.port=8501 --server.address=0.0.0.0
