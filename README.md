@@ -46,12 +46,36 @@ python3 --version
 python --version
 ```
 > *(Если система пишет, что команда не найдена, попробуйте написать просто `python --version`)*. 
-Если Python не установлен — скачайте его с официального сайта python.org. Нужна версия 3.9 или новее.
+Если Python не установлен — скачайте его с официального сайта python.org. Нужна стабильная версия от 3.9 до 3.12 (очень новые экспериментальные версии, например 3.14, могут вызывать ошибки при установке библиотек).
+
+### Шаг 2.1. Решение проблем: понижение версии Python (Только для macOS)
+Проект требует стабильную версию Python (от 3.9 до 3.12). Если ваша система использует слишком новую версию (например, `3.14`), при установке библиотек возникнут ошибки. В таком случае установите `3.12` параллельно:
+
+1. Установите пакетный менеджер Homebrew *(если он уже установлен — переходите к шагу 3)*:
+```bash
+/bin/bash -c "$(curl -fsSL [https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh](https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh))"
+```
+2. Добавьте Homebrew в PATH (выполните команды по очереди):
+```bash
+echo >> ~/.zprofile
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+```
+3. Установите стабильный Python 3.12:
+```bash
+brew install python@3.12
+```
+4. Создайте виртуальное окружение именно на этой версии и активируйте его:
+```bash
+/opt/homebrew/bin/python3.12 -m venv .venv
+source .venv/bin/activate
+```
+*(После этого можете сразу переходить к Шагу 5, пропустив 3 и 4)*.
 
 ### Шаг 3. Скачайте проект на свой компьютер
 В том же терминале по очереди введите эти две команды:
 ```bash
-git clone https://github.com/iberbikov-code/corporate_mail_processor.git
+git clone [https://github.com/iberbikov-code/corporate_mail_processor.git](https://github.com/iberbikov-code/corporate_mail_processor.git)
 cd corporate_mail_processor
 ```
 > Если программа git не установлена — зайдите на страницу нашего репозитория в браузере, нажмите зелёную кнопку Code → Download ZIP, распакуйте архив и перейдите в эту папку через ваш терминал.
@@ -66,13 +90,20 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-**Для Windows:**
-```bash
+**Для Windows (cmd):**
+```cmd
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 ```
-(после этих манипуляций для Windows должно высвечиваться в начале строки (.venv))
+
+**Для Windows (PowerShell):**
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+*(после этих манипуляций для Windows должно высвечиваться в начале строки (.venv))*
 
 ### Шаг 5. Положите письма в папку inbox/ (Обязательно)
 Чтобы программе было что сортировать, нам нужно добавить сами письма.
@@ -95,7 +126,7 @@ chmod +x run_mail_processor.sh
 ```bash
 python3 src/main.py
 ```
-если cmd просто вывела слово Python, то попробуйте
+*(если cmd просто вывела слово Python или ошибку, то попробуйте)*
 ```bash
 python -m src.main
 ```
@@ -112,26 +143,26 @@ python -m src.main
 docker compose up --build
 ```
 Дождитесь сборки и перейдите в браузере по ссылке: **http://localhost:8501**
+*(Чтобы остановить работу контейнеров на любой ОС (Windows, macOS, Linux), нажмите комбинацию клавиш `Control+C` в терминале. Для полной остановки и очистки сети контейнеров можно открыть соседнее окно терминала и выполнить `docker compose down`).*
 
 **Вариант Б — Локальный запуск (если нет Docker):**
 При активированном виртуальном окружении выполните:
 ```bash
 python3 -m streamlit run extension/dashboard.py
 ```
-(если cmd просто вывела слово Python, то попробуйте)
+*(если cmd просто вывела слово Python или ошибку, то попробуйте)*
 ```bash
 python -m streamlit run extension/dashboard.py
 ```
 Браузер автоматически откроет красивый отчет.
-
-(Чтобы завершить работу Docker Desktop в терминали нужно выполнить комбинацию клавищ "Control+C")
+*(Чтобы завершить работу дашборда в терминале, также нажмите `Control+C`)*
 
 ## Запуск автотестов
 Мы покрыли код тестами pytest, чтобы доказать, что классификатор работает без ошибок, а бинарные файлы не ломают систему. Для запуска проверок введите в терминал:
 ```bash
 python3 -m pytest tests/ -v
 ```
-(если cmd просто вывела слово Python, то попробуйте)
+*(если cmd просто вывела слово Python или ошибку, то попробуйте)*
 ```bash
 python -m pytest tests/ -v
 ```
