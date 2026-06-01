@@ -31,10 +31,14 @@ def test_get_all_inbox_files_excludes_hidden(tmp_path):
     assert files[0].name == "mail_001.txt"
 
 def test_route_file_lands_in_correct_directory(tmp_path):
-    """route_file копирует файл в нужную категорию."""
-    src = tmp_path / "mail.txt"
-    src.write_text("test", encoding="utf-8")
-    handler = FileHandler(inbox_dir=str(tmp_path), output_dir=str(tmp_path))
-    doc = EmailDocument(file_path=src, is_readable=True, content="test")
-    handler.route_file(doc, "critical_incidents")
-    assert (tmp_path / "critical_incidents" / "mail.txt").exists()
+        """route_file копирует файл в нужную категорию с учетом уникального имени."""
+        src = tmp_path / "mail.txt"
+        src.write_text("test", encoding="utf-8")
+        handler = FileHandler(inbox_dir=str(tmp_path), output_dir=str(tmp_path))
+        doc = EmailDocument(file_path=src, is_readable=True, content="test")
+        handler.route_file(doc, "critical_incidents")
+        
+        category_dir = tmp_path / "critical_incidents"
+        assert category_dir.exists()
+        files = list(category_dir.glob("mail_*.txt"))
+        assert len(files) == 1

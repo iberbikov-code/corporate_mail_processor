@@ -29,15 +29,19 @@ class FileHandler:
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
+            if '\x00' in content:
+                raise ValueError("Binary")
             return EmailDocument(file_path=file_path, is_readable=True, content=content)
 
-        except UnicodeDecodeError:
+        except (UnicodeDecodeError, ValueError):
             try:
                 with open(file_path, 'r', encoding='windows-1251') as f:
                     content = f.read()
+                if '\x00' in content:
+                    raise ValueError("Binary")
                 return EmailDocument(file_path=file_path, is_readable=True, content=content)
 
-            except UnicodeDecodeError:
+            except (UnicodeDecodeError, ValueError):
                 logger.warning("Файл %s не является текстом (бинарный формат). Пропуск.", file_path.name)
                 return EmailDocument(file_path=file_path, is_readable=False)
 
