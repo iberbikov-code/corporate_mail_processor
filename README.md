@@ -72,7 +72,7 @@ source .venv/bin/activate
 ```
 5. Установи зависимости:
 ```bash
-bashpip install -r requirements.txt**
+pip install -r requirements.txt**
 ```
 
 ### Шаг 3. Скачайте проект на свой компьютер
